@@ -112,13 +112,16 @@ install_deb() {
 install_deb "https://mega.nz/linux/repo/xUbuntu_24.04/amd64/megasync-xUbuntu_24.04_amd64.deb" "megasync"
 install_deb "https://code-industry.net/public/master-pdf-editor-5.9.60-qt5.x86_64.deb" "masterpdf"
 
-## VScode
-echo " → Adding VSCode repo"
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor \
-    | sudo tee /usr/share/keyrings/ms_vscode.gpg >/dev/null
+# --- VS Code Instalacija ---
+echo "[+] Installing VS Code..."
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+sudo apt update && sudo apt install -y code
 
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/ms_vscode.gpg] https://packages.microsoft.com/repos/code stable main" \
-    | sudo tee /etc/apt/sources.list.d/vscode.list >/dev/null
+# --- Pokretanje Anaconda skripte ---
+bash "$REPO_DIR/install_anaconda.sh"
 
 echo "[4] Repositories added."
 
@@ -230,10 +233,6 @@ bash "$REPO_DIR/languages/install_go.sh"
 
 echo " → Running install_rbenv.sh"
 bash "$REPO_DIR/languages/install_rbenv.sh"
-
-# Conda je ostavljena komentirana
-#echo " → Running install_conda.sh"
-#bash "$REPO_DIR/languages/install_conda.sh"
 
 # -------------------------------------------------------
 # 12) FINAL CLEANUP

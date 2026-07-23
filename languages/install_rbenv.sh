@@ -34,8 +34,8 @@ export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
 eval "$(rbenv init -)"
 
-rbenv install -s 3.3.0
-rbenv global 3.3.0
+rbenv install -s 3.3.10
+rbenv global 3.3.10
 rbenv rehash
 
 ruby -v

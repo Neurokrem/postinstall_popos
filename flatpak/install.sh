@@ -16,7 +16,6 @@ flatpak install -y flathub md.obsidian.Obsidian
 flatpak install -y flathub org.localsend.localsend_app
 flatpak install -y flathub org.onlyoffice.desktopeditors
 flatpak install -y flathub org.qbittorrent.qBittorrent
-flatpak install -y flathub org.signal.Signal
 flatpak install -y flathub org.strawberrymusicplayer.strawberry
 flatpak install -y flathub org.videolan.VLC
 

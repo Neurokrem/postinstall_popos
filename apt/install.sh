@@ -8,7 +8,6 @@ cargo \
 cmake \
 cpu-checker \
 cron \
-discord \
 distro-info \
 dkms \
 dmg2img \
