@@ -1,6 +1,7 @@
 #!/bin/bash
-# Putanja do tvojih dokumenata
-TARGET_PATH="$HOME/Documents/anaconda3"
+# Detekcija Documents foldera (radi bez obzira na jezik sustava)
+DOCUMENTS_DIR=$(xdg-user-dir DOCUMENTS)
+TARGET_PATH="$DOCUMENTS_DIR/anaconda3"
 
 if [ -d "$TARGET_PATH" ]; then
     echo "[!] Anaconda je već instalirana u $TARGET_PATH"
