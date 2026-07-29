@@ -190,20 +190,24 @@ mkdir -p "$HOME/.config/kitty"
 cp -rT "$REPO_DIR/kitty" "$HOME/.config/kitty/"
 
 if [ -d "$REPO_DIR/icons" ]; then
-    echo "[9] Restoring icons..."
+    echo "[9c] Restoring icons..."
     mkdir -p "$HOME/.local/share/icons"
     cp -rT "$REPO_DIR/icons" "$HOME/.local/share/icons"
 fi
 
+# Postavi ikone direktno u COSMIC config
+echo "[9d] Setting COSMIC icon theme..."
+mkdir -p "$HOME/.config/cosmic/com.system76.CosmicTk/v1"
+echo '"Colloid-teal-dark"' > "$HOME/.config/cosmic/com.system76.CosmicTk/v1/icon_theme"
+
 # -------------------------------------------------------
-# 10) WALLPAPER (KOPIRANJE + URI + REFRESH HACK)
+# 10) WALLPAPER
 # -------------------------------------------------------
-echo "[10] Installing wallpapers and attempting to set URI (Toggle Refresh)..."
+echo "[10] Installing wallpapers..."
 
 WALLPAPER_SOURCE_DIR="$REPO_DIR/wallpapers"
 TARGET_DIR="$PICTURES_DIR/Wallpaper"
 TARGET_FILE="$TARGET_DIR/jutro 4K.jpg"
-WALLPAPER_URI="file://$TARGET_FILE"
 
 if [ -d "$WALLPAPER_SOURCE_DIR" ]; then
     echo " → Copying ALL wallpapers from repo to $TARGET_DIR..."
@@ -211,20 +215,22 @@ if [ -d "$WALLPAPER_SOURCE_DIR" ]; then
     cp -rT "$WALLPAPER_SOURCE_DIR" "$TARGET_DIR"
 
     if [ -f "$TARGET_FILE" ]; then
-        echo " → Setting desktop wallpaper URI..."
-        
-        # 1. Postavljanje URI-ja
-        gsettings set org.gnome.desktop.background picture-uri "$WALLPAPER_URI" || true
-        gsettings set org.gnome.desktop.background picture-uri-dark "$WALLPAPER_URI" || true
-        
-        # 2. Forsiranje osvježavanja (Toggle Hack)
-        # Pretpostavljamo da je 'zoom' željena i trenutna opcija.
-        gsettings set org.gnome.desktop.background picture-options 'stretched' || true
-        gsettings set org.gnome.desktop.background picture-options 'zoom' || true
-        
-        echo "INFO: Wallpaper URI set. Pokušaj osvježavanja dovršen."
+        echo " → Setting COSMIC wallpaper..."
+        mkdir -p "$HOME/.config/cosmic/com.system76.CosmicBackground/v1"
+        cat > "$HOME/.config/cosmic/com.system76.CosmicBackground/v1/all" << EOF
+(
+    output: "all",
+    source: Path("$TARGET_FILE"),
+    filter_by_theme: true,
+    rotation_frequency: 300,
+    filter_method: Lanczos,
+    scaling_mode: Zoom,
+    sampling_method: Alphanumeric,
+)
+EOF
+        echo "INFO: COSMIC wallpaper config written."
     else
-        echo "ERROR: Default wallpaper file ($TARGET_FILE) not found after copy. Cannot set background."
+        echo "ERROR: Default wallpaper file ($TARGET_FILE) not found after copy."
     fi
 else
     echo "WARNING: Wallpapers directory not found in repository. Skipping wallpaper setup."
